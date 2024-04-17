@@ -35,6 +35,10 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
+    const mod_fluent = b.addModule("fluent", .{
+        .root_source_file = b.dependency("fluent", .{}).path("fluent.zig"),
+    });
+    exe.root_module.addImport("fluent", mod_fluent);
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default

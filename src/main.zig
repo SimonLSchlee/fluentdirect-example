@@ -1,19 +1,17 @@
 const std = @import("std");
+const Fluent = @import("fluent");
 
 pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
-    std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
+    const str_a: []const u8 = "    hello,";
+    const str_b: []const u8 = " world!   ";
+    var buf: [64]u8 = undefined;
 
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
+    const result = Fluent.init(str_a) // initialize our interface on str_a
+        .concat(str_b, buf[0..]) // concatenate str_b into buffer
+        .trim(.periphery, .scalar, ' ') // trim spaces on both sides
+        .title(); // python title function
 
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
-
-    try bw.flush(); // don't forget to flush!
+    _ = result.print("result: {s}\n");
 }
 
 test "simple test" {
